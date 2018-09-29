@@ -1,12 +1,6 @@
-export class Category {
-  constructor(public id: number, 
-              public name:string, 
-              public hasSubCategory: boolean,
-              public parentId: number){ }
-}
-
-export class Product {
-  constructor(public id?: number,
+export class ProductsViewmodel {
+    constructor(
+              public product_id?: number,
               public name?: string,
               public images?: Array<any>,
               public oldPrice?: number,
@@ -14,10 +8,14 @@ export class Product {
               public discount?: number,
               public ratingsCount?: number,
               public ratingsValue?: number,
-              public description?: string,
+              public product_description?: string,
               public availibilityCount?: number,
               public color?: Array<string>,
               public size?: Array<string>,
+              public organisation?: Array<any>,
               public weight?: number,
-              public categoryId?: number){ }
+              public categoryId?: number,
+              public sub_category?: number,
+              public detail?: string,
+              public keywords?:string	){ }
 }

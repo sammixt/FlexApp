@@ -4,18 +4,32 @@ import { Location } from '@angular/common';
 
 import { SidenavMenu } from './sidenav-menu.model';
 import { sidenavMenuItems } from './sidenav-menu';
+import { BackendServices } from "../../../../services/backendservice/backend-services.service";
+import { SidenavViewmodel } from "../../../../viewmodel/sidenav-viewmodel.viewmodel";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Injectable()
 export class SidenavMenuService {
 
-    constructor(private location:Location, private router:Router){ } 
+    constructor(private location:Location, private router:Router, private sideNav:BackendServices){ } 
         
-    public getSidenavMenuItems():Array<SidenavMenu> {
-        return sidenavMenuItems;
-    }
+    // public getSidenavMenuItems():Array<SidenavMenu> {
+    //     return sidenavMenuItems;
+    // }
 
+public getSidenavMenuItems():Array<SidenavViewmodel> {
+        let categories : Array<SidenavViewmodel> ;
+          this.sideNav.getSideNav().subscribe((data : any) =>{
+           categories.includes = data['body'].response.payload;
+       },
+     (err : HttpErrorResponse) => {
+        //alert('An error occurred');
+        categories = null;
+     });
+     return categories;
+    }
   
-    public expandActiveSubMenu(menu:Array<SidenavMenu>){
+    public expandActiveSubMenu(menu:Array<SidenavViewmodel>){
         let url = this.location.path();
         let routerLink = decodeURIComponent(url);
         let activeMenuItem = menu.filter(item => item.routerLink === routerLink);
@@ -61,7 +75,7 @@ export class SidenavMenuService {
     }
 
     public closeAllSubMenus(){        
-        sidenavMenuItems.forEach(item => {
+        this.getSidenavMenuItems().forEach(item => {
             let subMenu = document.getElementById('sub-menu-'+item.id);
             let menuItem = document.getElementById('menu-item-'+item.id);
             if(subMenu){

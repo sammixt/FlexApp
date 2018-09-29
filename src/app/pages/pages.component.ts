@@ -5,6 +5,8 @@ import { Settings, AppSettings } from '../app.settings';
 import { AppService } from '../app.service';
 import { Category } from '../app.models';
 import { SidenavMenuService } from '../theme/components/sidenav-menu/sidenav-menu.service';
+import { BackendServices } from "../../services/backendservice/backend-services.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-pages',
@@ -23,20 +25,33 @@ export class PagesComponent implements OnInit {
   constructor(public appSettings:AppSettings, 
               public appService:AppService, 
               public sidenavMenuService:SidenavMenuService,
-              public router:Router) { 
+              public router:Router,public service: BackendServices) { 
     this.settings = this.appSettings.settings; 
   }
 
   ngOnInit() {
     this.getCategories();
-    this.sidenavMenuItems = this.sidenavMenuService.getSidenavMenuItems();
+    //debugger;
+     this.getSidenavMenu();
+    //this.sidenavMenuItems = this.sidenavMenuService.getSidenavMenuItems();
   } 
 
-  public getCategories(){    
-    this.appService.getCategories().subscribe(data => {
-      this.categories = data;
-      this.category = data[0];
-      this.appService.Data.categories = data;
+  public getSidenavMenu(){
+     this.service.getCategories().subscribe((data : any) =>{
+       //console.log(data['body'].response.payload);
+         this.sidenavMenuItems = data['body'].response.payload;
+       },
+     (err : HttpErrorResponse) => {
+        alert('An error occurred');
+     });
+  }
+  public getCategories(){   
+    // this.appService.getCategories().subscribe 
+    this.service.getCategories().subscribe(data => {
+      this.categories = data['body'].response.payload;
+      this.category = data['body'].response.payload[0];
+      //console.log(data[0]);
+      this.service.Data.categories = data['body'].response.payload;
     })
   }
 

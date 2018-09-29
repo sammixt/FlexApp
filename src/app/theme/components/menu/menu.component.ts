@@ -1,15 +1,20 @@
-import { Component, OnInit} from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from "@angular/common/http";
+import { BackendServices } from "../../../../services/backendservice/backend-services.service";
+import "rxjs/Rx";
+import { Observable } from "rxjs";
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
+  cat : any ;
+  constructor(private service: BackendServices) { }
 
-  constructor() { }
-
-  ngOnInit() { }
+  ngOnInit() {
+    this.getMenus();
+   }
 
   openMegaMenu(){
     let pane = document.getElementsByClassName('cdk-overlay-pane');
@@ -21,5 +26,15 @@ export class MenuComponent implements OnInit {
         }        
     });
   }
+
+  getMenus(){
+       this.service.getCategories().subscribe((data : any) =>{
+          this.cat = data['body'].response.payload;
+       },
+     (err : HttpErrorResponse) => {
+        //alert('An error occurred');
+     });
+  }
+
 
 }

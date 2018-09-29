@@ -6,9 +6,10 @@ import { Data, AppService } from '../../../app.service';
   templateUrl: './top-menu.component.html'
 })
 export class TopMenuComponent implements OnInit {
-  public currencies = ['USD', 'EUR'];
+  public currencies = ['USD', 'EUR','NGN'];
   public currency:any;
   public message: string;
+  public Name: string;
   public flags = [
     { name:'English', image: 'assets/images/flags/gb.svg' },
     { name:'German', image: 'assets/images/flags/de.svg' },
@@ -28,8 +29,10 @@ export class TopMenuComponent implements OnInit {
 
 public  checkLoginState(): void{
   if(localStorage.getItem('currentUser') !== null){
-    debugger;
-    console.log(localStorage.getItem('currentUser'))
+    //debugger;
+    var userdetail = JSON.parse(localStorage.getItem('currentUser'))
+    console.log(localStorage.getItem('currentUser'));
+    this.Name = userdetail.data.sub;
     this.message = "Sign out";
   }else{
     this.message = "Sign in";

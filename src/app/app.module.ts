@@ -27,6 +27,8 @@ import { OptionsComponent } from './theme/components/options/options.component';
 import { FooterComponent } from './theme/components/footer/footer.component';
 import { AuthService } from "../services/auth-service.service";
 import { AuthGuard } from "../services/auth-guard.service";
+import { BackendServices } from "../services/backendservice/backend-services.service";
+import { GetProducts } from "../services/backendservice/get-products.service";
 
 
 @NgModule({
@@ -55,7 +57,7 @@ import { AuthGuard } from "../services/auth-guard.service";
   providers: [
     AppSettings,
     AppService,  
-    AuthService,AuthGuard, 
+    AuthService,AuthGuard,BackendServices,GetProducts, 
     { provide: OverlayContainer, useClass: CustomOverlayContainer },
     { provide: MAT_MENU_SCROLL_STRATEGY, useFactory: menuScrollStrategy, deps: [Overlay] },
     { provide: HTTP_INTERCEPTORS, useClass: AppInterceptor, multi: true }

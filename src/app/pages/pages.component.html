@@ -33,7 +33,8 @@
             <app-top-menu></app-top-menu>       
         </mat-toolbar-row>
         <mat-toolbar-row fxLayoutAlign="space-between center" class="logo-toolbar theme-container">
-            <a class="logo" routerLink="/" (click)="closeSubMenus()">FLAP</a>
+            <a class="logo" routerLink="/" (click)="closeSubMenus()">
+            <img class="img img-circle" width='40px' height="40px" src='assets/images/IMG-20180924-WA0000.jpg'/> FLAP</a>
             <div fxFlex fxFlexOffset.gt-sm="10" fxShow="false" fxShow.gt-sm>
                 <form method="get"  class="search-form" fxLayout="row">
                     <button mat-raised-button [matMenuTriggerFor]="categoriesMenu" #categoriesMenuTrigger="matMenuTrigger" type="button" class="mat-elevation-z0 categories text-truncate text-muted">{{category?.name}}<mat-icon>arrow_drop_down</mat-icon></button>

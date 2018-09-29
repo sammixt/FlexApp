@@ -4,6 +4,8 @@ import { MatDialog } from '@angular/material';
 import { ProductDialogComponent } from '../../shared/products-carousel/product-dialog/product-dialog.component';
 import { AppService } from '../../app.service';
 import { Product, Category } from "../../app.models";
+import { GetProducts } from "../../../services/backendservice/get-products.service";
+import { ProductsViewmodel } from "../../../viewmodel/products-viewmodel.viewmodel";
 
 @Component({
   selector: 'app-products',
@@ -20,7 +22,8 @@ export class ProductsComponent implements OnInit {
   public count:any;
   public sortings = ['Sort by Default', 'Best match', 'Lowest first', 'Highest first'];
   public sort:any;
-  public products: Array<Product> = [];
+  //public products: Array<Product> = [];
+  public products: Array<ProductsViewmodel> = [];
   public categories:Category[];
   public brands = [];
   public priceFrom: number = 750;
@@ -29,13 +32,15 @@ export class ProductsComponent implements OnInit {
   public sizes = ["S","M","L","XL","2XL","32","36","38","46","52","13.3\"","15.4\"","17\"","21\"","23.4\""];
   public page:any;
 
-  constructor(private activatedRoute: ActivatedRoute, public appService:AppService, public dialog: MatDialog, private router: Router) { }
+  constructor(private activatedRoute: ActivatedRoute, public appService:AppService,public getProductSvc: GetProducts, public dialog: MatDialog, private router: Router) { }
 
   ngOnInit() {
     this.count = this.counts[0];
     this.sort = this.sortings[0];
-    this.sub = this.activatedRoute.params.subscribe(params => {
-      //console.log(params['name']);
+    this.activatedRoute.params.subscribe(params => {
+      if(params){
+        this.sub = params['id'];
+      }
     });
     if(window.innerWidth < 960){
       this.sidenavOpen = false;
@@ -44,20 +49,32 @@ export class ProductsComponent implements OnInit {
       this.viewCol = 33.3;
     };
 
-    this.getCategories();
-    this.getBrands();
-    this.getAllProducts();   
+    this.getCategories();//Change
+    this.getBrands();//Change
+    this.getAllProductsB();   
   }
 
-  public getAllProducts(){
-    this.appService.getProducts("featured").subscribe(data=>{
-      this.products = data; 
+  public getAllProductsB(){
+    console.log(this.sub);
+    this.getProductSvc.getProductsByCategoryId(this.sub).subscribe(data=>{
+      this.products = data['body'].response.payload; 
+      //console.log(this.products);
       //for show more product  
       for (var index = 0; index < 3; index++) {
         this.products = this.products.concat(this.products);        
       }
     });
   }
+
+  // public getAllProducts(){
+  //   this.appService.getProducts("featured").subscribe(data=>{
+  //     this.products = data; 
+  //     //for show more product  
+  //     for (var index = 0; index < 3; index++) {
+  //       this.products = this.products.concat(this.products);        
+  //     }
+  //   });
+  // }
 
   public getCategories(){  
     if(this.appService.Data.categories.length == 0) { 
@@ -76,7 +93,8 @@ export class ProductsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.sub = null;
+    //this.sub = 0
   }
 
   @HostListener('window:resize')
@@ -87,7 +105,7 @@ export class ProductsComponent implements OnInit {
 
   public changeCount(count){
     this.count = count;
-    this.getAllProducts(); 
+    this.getAllProductsB(); 
   }
 
   public changeSorting(sort){
@@ -113,7 +131,7 @@ export class ProductsComponent implements OnInit {
 
   public onPageChanged(event){
       this.page = event;
-      this.getAllProducts(); 
+      this.getAllProductsB(); 
       window.scrollTo(0,0); 
   }
 
